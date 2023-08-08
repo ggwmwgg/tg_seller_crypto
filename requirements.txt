@@ -1,0 +1,13 @@
+aiogram==2.25.1
+aiohttp==3.8.5
+aioredis==2.0.1
+aerich==0.7.2
+python-dotenv==1.0.0
+requests==2.31.0
+asyncpg==0.28.0
+tortoise==0.1.1
+tortoise-orm==0.19.3
+pandas==2.0.3
+bitcoinlib==0.6.11
+cryptography==41.0.3
+redis==4.6.0

@@ -1,0 +1,52 @@
+version: '3'
+services:
+  telegram_seller:
+    build: .
+    env_file: .env
+    container_name: telegram_seller
+    volumes:
+      - bot:/telegram_seller
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    entrypoint: /telegram_seller/entry.sh
+    networks:
+      - telegram_seller_network
+  db:
+    image: postgres:15.3
+    restart: always
+    env_file: .env
+    container_name: db
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "telegram_seller_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - database:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - telegram_seller_network
+  redis:
+    image: redis:7.0
+    restart: always
+    container_name: redis
+    command: ["redis-server", "--requirepass", "12345"]
+    volumes:
+      - redis:/usr/local/etc/redis
+    ports:
+      - "6379:6379"
+    networks:
+      - telegram_seller_network
+
+volumes:
+    database:
+    bot:
+    redis:
+
+networks:
+    telegram_seller_network:
+      driver: bridge
